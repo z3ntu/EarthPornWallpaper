@@ -1,0 +1,29 @@
+<background>
+  <static>
+    <duration>%PICDURATION%</duration>
+    <file>%FILE1%</file>
+  </static>
+  <transition>
+    <duration>%TRANSITIONDURATION%</duration>
+    <from>%FILE1%</from>
+    <to>%FILE2%</to>
+  </transition>
+  <static>
+    <duration>%PICDURATION%</duration>
+    <file>%FILE2%</file>
+  </static>
+  <transition>
+    <duration>%TRANSITIONDURATION%</duration>
+    <from>%FILE2%</from>
+    <to>%FILE3%</to>
+  </transition>
+    <static>
+    <duration>%PICDURATION%</duration>
+    <file>%FILE3%</file>
+  </static>
+  <transition>
+    <duration>%TRANSITIONDURATION%</duration>
+    <from>%FILE3%</from>
+    <to>%FILE1%</to>
+  </transition>
+</background>
