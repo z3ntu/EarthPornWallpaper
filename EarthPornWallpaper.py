@@ -14,6 +14,7 @@ SCHEMA = 'org.gnome.desktop.background'
 KEY = 'picture-uri'
 ROOT_PATH = os.path.expanduser('~/.earthpornwallpaper/')
 DOWNLOAD_PATH = ROOT_PATH + "downloads/"
+TMP_PATH = ROOT_PATH + "tmp/"
 IMGUR_BASE = "http://i.imgur.com/%IMGURID%.jpg"
 
 FILES = [str] * 3
@@ -23,13 +24,14 @@ TRANSITIONDURATION = "3,00"
 
 
 def main():
-    FILECOUNTER = 0
+    filecounter = 0
 
     create_directories()
-    clean_download_directory()
+    clean_directory(DOWNLOAD_PATH)
+    clean_directory(TMP_PATH)
 
     # PREPARE AND EXECUTE HTTP GET REQUEST
-    payload = {'limit': 3}
+    payload = {'limit': 5}
     headers = {'user-agent': 'EarthPornWallpaper'}
     r = requests.get("http://www.reddit.com/r/earthporn.json", params=payload, headers=headers)
 
@@ -44,52 +46,71 @@ def main():
         if imgur:
             imgurid = url[imgur.end()::]
             url = IMGUR_BASE.replace("%IMGURID%", imgurid)
+            
+        if save_img(url, filecounter):
+            print("Successful save!")
+            filecounter += 1
 
-        # print(url)
-        save_img(url, FILECOUNTER)
-        FILECOUNTER += 1
+        if filecounter >= 3:
+            break
 
     write_xml(True)
     return
 
 
 def save_img(url, filecounter):
-    print("Saving " + url + " as download" + str(filecounter))
+    tmp_path = TMP_PATH + "tmp" + str(filecounter)
+
+    print("Saving " + url + " as " + tmp_path)
     resource = urllib.request.urlopen(url)
-    output = open(DOWNLOAD_PATH + "download" + str(filecounter), "wb")
+    output = open(tmp_path, "wb")
     output.write(resource.read())
     output.close()
-    newfilename = "download" + str(filecounter) + "." + imghdr.what(DOWNLOAD_PATH + "download" + str(filecounter))
-    os.rename(DOWNLOAD_PATH + "download" + str(filecounter), DOWNLOAD_PATH + newfilename)
-    print("Renamed to " + newfilename)
-    FILES[filecounter] = DOWNLOAD_PATH + newfilename
-    return
+
+    imgtype = imghdr.what(tmp_path)
+    if imgtype is None:
+        print("Not a valid image, skipping!")
+        return False
+
+    new_path = DOWNLOAD_PATH + "download" + str(filecounter) + "." + imgtype
+    os.rename(tmp_path, new_path)
+    print("Moved to " + new_path)
+    FILES[filecounter] = new_path
+    return True
 
 
 def create_directories():
     print("Creating directories")
     os.makedirs(ROOT_PATH, exist_ok=True)
     os.makedirs(DOWNLOAD_PATH, exist_ok=True)
+    os.makedirs(TMP_PATH, exist_ok=True)
     return
 
 
-def clean_download_directory():
-    print("Cleaning download directory.")
-    for the_file in os.listdir(DOWNLOAD_PATH):
-        file_path = os.path.join(DOWNLOAD_PATH, the_file)
+def clean_directory(path):
+    print("Cleaning directory " + path)
+    for the_file in os.listdir(path):
+        file_path = os.path.join(path, the_file)
         try:
             if os.path.isfile(file_path):
                 os.unlink(file_path)
+                return True
         except Exception:
             print("exception while cleaning downloads directory!")
-    return
+    return False
 
 
 def clean_xml():
     print("Cleaning XML file")
     xmlpath = ROOT_PATH + "wallpaper.xml"
-    if os.path.isfile(xmlpath):
-        os.unlink(xmlpath)
+    delete_file(xmlpath)
+
+
+def delete_file(path):
+    if os.path.isfile(path):
+        os.unlink(path)
+        return True
+    return False
 
 
 def write_xml(setlocation):
@@ -111,7 +132,6 @@ def write_xml(setlocation):
 
 
 def set_wallpaper_location(filepath):
-    # SET BACKGROUND
     gsettings = Gio.Settings.new(SCHEMA)
     gsettings.set_string(KEY, "file://" + filepath)
 
