@@ -15,7 +15,7 @@ __author__ = 'z3ntu'
 
 SCHEMA = 'org.gnome.desktop.background'
 KEY = 'picture-uri'
-ROOT_PATH = os.path.expanduser('~/.earthpornwallpaper/')
+ROOT_PATH = os.path.expanduser('~/.earthpornwallpaper.py/')
 DOWNLOAD_PATH = ROOT_PATH + "downloads/"
 TMP_PATH = ROOT_PATH + "tmp/"
 IMGUR_BASE = "http://i.imgur.com/%IMGURID%.jpg"

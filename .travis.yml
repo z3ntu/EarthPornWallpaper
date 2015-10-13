@@ -10,4 +10,4 @@ python:
 
 install: "pip install -r requirements.txt"
 
-script: python ./earthpornwallpaper test
+script: python ./earthpornwallpaper.py test
