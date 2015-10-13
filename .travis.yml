@@ -8,11 +8,9 @@ python:
   - "3.5-dev" # 3.5 development branch
   - "nightly" # currently points to 3.6-dev
 
-install: "pip install -r requirements.txt"
-
 addons:
   apt:
     packages:
-    - python3-gi
+    - python3-requests
 
 script: python EarthPornWallpaper.py
