@@ -10,7 +10,10 @@ python:
 
 install: "pip install -r requirements.txt"
 
-script: python ./earthpornwallpaper.py test
+script:
+  - python setup_test.py
+  - python earthpornwallpaper.py test
+
 
 notifications:
   webhooks:
