@@ -12,5 +12,6 @@ addons:
   apt:
     packages:
     - python3-requests
+    - python3-gi
 
 script: python EarthPornWallpaper.py
