@@ -1,6 +1,5 @@
 #! /usr/bin/python
 
-
 import requests
 import os
 import urllib.request
@@ -9,7 +8,7 @@ import re
 import imghdr
 import sys
 
-if sys.argv[1] != "test":
+if "test" in sys.argv:
     from gi.repository import Gio
 
 __author__ = 'z3ntu'
@@ -136,7 +135,7 @@ def write_xml(setlocation):
 
 
 def set_wallpaper_location(filepath):
-    if sys.argv[1] != "test":
+    if "test" in sys.argv:
         gsettings = Gio.Settings.new(SCHEMA)
         gsettings.set_string(KEY, "file://" + filepath)
 
