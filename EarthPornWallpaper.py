@@ -1,12 +1,16 @@
 #! /usr/bin/python
 
-from gi.repository import Gio
+
 import requests
 import os
 import urllib.request
 import json
 import re
 import imghdr
+import sys
+
+if sys.argv[0] != "test":
+    from gi.repository import Gio
 
 __author__ = 'z3ntu'
 
@@ -132,8 +136,9 @@ def write_xml(setlocation):
 
 
 def set_wallpaper_location(filepath):
-    gsettings = Gio.Settings.new(SCHEMA)
-    gsettings.set_string(KEY, "file://" + filepath)
+    if sys.argv[0] != "test":
+        gsettings = Gio.Settings.new(SCHEMA)
+        gsettings.set_string(KEY, "file://" + filepath)
 
 
 if __name__ == '__main__':
