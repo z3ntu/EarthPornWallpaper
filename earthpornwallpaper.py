@@ -91,9 +91,7 @@ def create_directories():
 
 def clean_directory(path):
     print("Cleaning directory " + path)
-    print(str(os.listdir(path)))
     for the_file in os.listdir(path):
-        print(path)
         file_path = os.path.join(path, the_file)
         try:
             if os.path.isfile(file_path):
