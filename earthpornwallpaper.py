@@ -9,8 +9,6 @@ import imghdr
 import sys
 from time import strftime
 
-if "test" not in sys.argv:
-    from gi.repository import Gio
 
 __author__ = 'z3ntu'
 
@@ -142,6 +140,7 @@ def write_xml(setlocation):
 
 def set_wallpaper_location(filepath):
     if "test" not in sys.argv:
+        from gi.repository import Gio
         gsettings = Gio.Settings.new(SCHEMA)
         gsettings.set_string(KEY, "file://" + filepath)
 
