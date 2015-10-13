@@ -15,9 +15,9 @@ __author__ = 'z3ntu'
 
 SCHEMA = 'org.gnome.desktop.background'
 KEY = 'picture-uri'
-ROOT_PATH = os.path.expanduser('~/.earthpornwallpaper.py/')
-DOWNLOAD_PATH = ROOT_PATH + "downloads/"
-TMP_PATH = ROOT_PATH + "tmp/"
+DATA_PATH = os.path.expanduser('~/.earthpornwallpaper/')
+DOWNLOAD_PATH = DATA_PATH + "downloads/"
+TMP_PATH = DATA_PATH + "tmp/"
 IMGUR_BASE = "http://i.imgur.com/%IMGURID%.jpg"
 
 FILES = [str] * 3
@@ -30,8 +30,7 @@ def main():
     filecounter = 0
 
     create_directories()
-    clean_directory(DOWNLOAD_PATH)
-    clean_directory(TMP_PATH)
+    clean_directories()
 
     # PREPARE AND EXECUTE HTTP GET REQUEST
     payload = {'limit': 5}
@@ -84,7 +83,7 @@ def save_img(url, filecounter):
 
 def create_directories():
     print("Creating directories")
-    os.makedirs(ROOT_PATH, exist_ok=True)
+    os.makedirs(DATA_PATH, exist_ok=True)
     os.makedirs(DOWNLOAD_PATH, exist_ok=True)
     os.makedirs(TMP_PATH, exist_ok=True)
     return
@@ -92,7 +91,9 @@ def create_directories():
 
 def clean_directory(path):
     print("Cleaning directory " + path)
+    print(str(os.listdir(path)))
     for the_file in os.listdir(path):
+        print(path)
         file_path = os.path.join(path, the_file)
         try:
             if os.path.isfile(file_path):
@@ -103,9 +104,14 @@ def clean_directory(path):
     return False
 
 
+def clean_directories():
+    clean_directory(DOWNLOAD_PATH)
+    clean_directory(TMP_PATH)
+
+
 def clean_xml():
     print("Cleaning XML file")
-    xmlpath = ROOT_PATH + "wallpaper.xml"
+    xmlpath = DATA_PATH + "wallpaper.xml"
     delete_file(xmlpath)
 
 
@@ -127,11 +133,11 @@ def write_xml(setlocation):
     template = template.replace("%FILE3%", FILES[2])
     template = template.replace("%TRANSITIONDURATION%", TRANSITIONDURATION)
     template = template.replace("%PICDURATION%", PICDURATION)
-    w = open(ROOT_PATH + "wallpaper.xml", "w")
+    w = open(DATA_PATH + "wallpaper.xml", "w")
     w.write(template)
     w.close()
     if setlocation:
-        set_wallpaper_location(ROOT_PATH + "wallpaper.xml")
+        set_wallpaper_location(DATA_PATH + "wallpaper.xml")
 
 
 def set_wallpaper_location(filepath):
