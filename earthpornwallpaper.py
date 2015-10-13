@@ -7,6 +7,7 @@ import json
 import re
 import imghdr
 import sys
+from time import strftime
 
 if "test" not in sys.argv:
     from gi.repository import Gio
@@ -27,6 +28,7 @@ TRANSITIONDURATION = "3,00"
 
 
 def main():
+    log("------- BEGIN EARTHPORNWALLPAPER -------")
     filecounter = 0
 
     create_directories()
@@ -50,7 +52,7 @@ def main():
             url = IMGUR_BASE.replace("%IMGURID%", imgurid)
             
         if save_img(url, filecounter):
-            print("Successful save!")
+            log("Successful save!")
             filecounter += 1
 
         if filecounter >= 3:
@@ -63,7 +65,7 @@ def main():
 def save_img(url, filecounter):
     tmp_path = TMP_PATH + "tmp" + str(filecounter)
 
-    print("Saving " + url + " as " + tmp_path)
+    log("Saving " + url + " as " + tmp_path)
     resource = urllib.request.urlopen(url)
     output = open(tmp_path, "wb")
     output.write(resource.read())
@@ -71,18 +73,18 @@ def save_img(url, filecounter):
 
     imgtype = imghdr.what(tmp_path)
     if imgtype is None:
-        print("Not a valid image, skipping!")
+        log("Not a valid image, skipping!")
         return False
 
     new_path = DOWNLOAD_PATH + "download" + str(filecounter) + "." + imgtype
     os.rename(tmp_path, new_path)
-    print("Moved to " + new_path)
+    log("Moved to " + new_path)
     FILES[filecounter] = new_path
     return True
 
 
 def create_directories():
-    print("Creating directories")
+    log("Creating directories")
     os.makedirs(DATA_PATH, exist_ok=True)
     os.makedirs(DOWNLOAD_PATH, exist_ok=True)
     os.makedirs(TMP_PATH, exist_ok=True)
@@ -90,15 +92,15 @@ def create_directories():
 
 
 def clean_directory(path):
-    print("Cleaning directory " + path)
+    log("Cleaning directory " + path)
     for the_file in os.listdir(path):
         file_path = os.path.join(path, the_file)
         try:
             if os.path.isfile(file_path):
                 os.unlink(file_path)
                 return True
-        except Exception:
-            print("exception while cleaning downloads directory!")
+        except OSError:
+            log("exception while cleaning directory " + path)
     return False
 
 
@@ -108,7 +110,7 @@ def clean_directories():
 
 
 def clean_xml():
-    print("Cleaning XML file")
+    log("Cleaning XML file")
     xmlpath = DATA_PATH + "wallpaper.xml"
     delete_file(xmlpath)
 
@@ -122,8 +124,8 @@ def delete_file(path):
 
 def write_xml(setlocation):
     clean_xml()
-    print("Writing XML file")
-    r = open("wallpaper_template.xml", "r")
+    log("Writing XML file")
+    r = open(DATA_PATH + "wallpaper_template.xml", "r")
     template = r.read()
     r.close()
     template = template.replace("%FILE1%", FILES[0])
@@ -142,6 +144,10 @@ def set_wallpaper_location(filepath):
     if "test" not in sys.argv:
         gsettings = Gio.Settings.new(SCHEMA)
         gsettings.set_string(KEY, "file://" + filepath)
+
+
+def log(message):
+    print("[" + strftime("%Y-%m-%d %H:%M:%S") + "] " + message)
 
 
 if __name__ == '__main__':
