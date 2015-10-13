@@ -10,9 +10,4 @@ python:
 
 install: "pip install -r requirements.txt"
 
-#addons:
-#  apt:
-#    packages:
-#    - python3-gi
-
-script: python EarthPornWallpaper.py test
+script: python ./earthpornwallpaper test
