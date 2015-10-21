@@ -17,8 +17,7 @@ CRONTAB_CONTENT = "# DO NOT CHANGE THIS FILE!\n" \
                   "# https://github.com/z3ntu/EarthPornWallpaper\n" \
                   "\n" \
                   "# minute hour day month dayOfWeek user command\n" \
-                  "0 * * * * " + os.getlogin() + " " + PROGRAM_PATH + "earthpornwallpaper &>> " + DATA_PATH + "output.log\n" \
-                                                                                                              "#* * * * * " + os.getlogin() + " '" + PROGRAM_PATH + "earthpornwallpaper >> " + DATA_PATH + "output.log'"
+                  "0 * * * * " + os.getlogin() + " " + PROGRAM_PATH + "earthpornwallpaper &>> " + DATA_PATH + "output.log"
 
 
 def main():
