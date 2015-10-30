@@ -4,7 +4,8 @@ import os
 import shutil
 import sys
 from pwd import getpwnam
-from earthpornwallpaper import create_directories, clean_directories, delete_file, log
+from time import strftime
+from earthpornwallpaper import create_directories, clean_directories, delete_file
 
 DATA_PATH = os.path.expanduser('~/.earthpornwallpaper/')
 DOWNLOAD_PATH = DATA_PATH + "downloads/"
@@ -17,7 +18,7 @@ CRONTAB_CONTENT = "# DO NOT CHANGE THIS FILE!\n" \
                   "# https://github.com/z3ntu/EarthPornWallpaper\n" \
                   "\n" \
                   "# minute hour day month dayOfWeek user command\n" \
-                  "0 * * * * " + os.getlogin() + " " + PROGRAM_PATH + "earthpornwallpaper &>> " + DATA_PATH + "output.log"
+                  "0 * * * * " + os.getlogin() + " " + "earthpornwallpaper cron"
 
 
 def main():
@@ -47,6 +48,10 @@ def main():
     crontab.write(CRONTAB_CONTENT)
     crontab.close()
     log("Written cronjob!")
+
+
+def log(message):
+    print("[" + strftime("%Y-%m-%d %H:%M:%S") + "] " + message)
 
 
 def check_if_root():

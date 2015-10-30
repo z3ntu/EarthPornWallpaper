@@ -18,14 +18,20 @@ DATA_PATH = os.path.expanduser('~/.earthpornwallpaper/')
 DOWNLOAD_PATH = DATA_PATH + "downloads/"
 TMP_PATH = DATA_PATH + "tmp/"
 IMGUR_BASE = "http://i.imgur.com/%IMGURID%.jpg"
+LOG_FILE = DATA_PATH + "output.log"
+LOG = sys.__stdout__
 
 FILES = [str] * 3
 
 PICDURATION = "120,00"
 TRANSITIONDURATION = "3,00"
 
+HEADER = {'user-agent': 'EarthPornWallpaper'}
+
 
 def main():
+    global LOG
+    LOG = open(LOG_FILE, "a")
     log("------- BEGIN EARTHPORNWALLPAPER -------")
     filecounter = 0
 
@@ -34,8 +40,7 @@ def main():
 
     # PREPARE AND EXECUTE HTTP GET REQUEST
     payload = {'limit': 5}
-    headers = {'user-agent': 'EarthPornWallpaper'}
-    r = requests.get("http://www.reddit.com/r/earthporn.json", params=payload, headers=headers)
+    r = requests.get("http://www.reddit.com/r/earthporn.json", params=payload, headers=HEADER)
 
     # PARSE JSON
     redditapi = json.loads(r.text)
@@ -64,7 +69,8 @@ def save_img(url, filecounter):
     tmp_path = TMP_PATH + "tmp" + str(filecounter)
 
     log("Saving " + url + " as " + tmp_path)
-    resource = urllib.request.urlopen(url)
+    request = urllib.request.Request(url, headers=HEADER)
+    resource = urllib.request.urlopen(request)
     output = open(tmp_path, "wb")
     output.write(resource.read())
     output.close()
@@ -146,8 +152,9 @@ def set_wallpaper_location(filepath):
 
 
 def log(message):
-    print("[" + strftime("%Y-%m-%d %H:%M:%S") + "] " + message)
-
+    if "cron" not in sys.argv:
+        print("[" + strftime("%Y-%m-%d %H:%M:%S") + "] " + message)
+    LOG.write("[" + strftime("%Y-%m-%d %H:%M:%S") + "] " + message + "\n")
 
 if __name__ == '__main__':
     main()
