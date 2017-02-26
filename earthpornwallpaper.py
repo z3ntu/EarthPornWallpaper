@@ -7,14 +7,14 @@ import json
 import re
 import imghdr
 import sys
+import libdesktop.wallpaper as lw
 from time import strftime
-
 
 __author__ = 'z3ntu'
 
-SCHEMA = 'org.gnome.desktop.background'
-KEY = 'picture-uri'
-DATA_PATH = os.path.expanduser('~/.earthpornwallpaper/')
+# SCHEMA = 'org.gnome.desktop.background'
+# KEY = 'picture-uri'
+DATA_PATH = os.path.expanduser('~/.local/share/earthpornwallpaper/')
 DOWNLOAD_PATH = DATA_PATH + "downloads/"
 TMP_PATH = DATA_PATH + "tmp/"
 IMGUR_BASE = "http://i.imgur.com/%IMGURID%.jpg"
@@ -61,7 +61,8 @@ def main():
         if filecounter >= 3:
             break
 
-    write_xml(True)
+    # write_xml(True)
+#    set_wallpaper()
     return
 
 
@@ -126,29 +127,52 @@ def delete_file(path):
     return False
 
 
-def write_xml(setlocation):
-    clean_xml()
-    log("Writing XML file")
-    r = open(DATA_PATH + "wallpaper_template.xml", "r")
-    template = r.read()
-    r.close()
-    template = template.replace("%FILE1%", FILES[0])
-    template = template.replace("%FILE2%", FILES[1])
-    template = template.replace("%FILE3%", FILES[2])
-    template = template.replace("%TRANSITIONDURATION%", TRANSITIONDURATION)
-    template = template.replace("%PICDURATION%", PICDURATION)
-    w = open(DATA_PATH + "wallpaper.xml", "w")
-    w.write(template)
-    w.close()
-    if setlocation:
-        set_wallpaper_location(DATA_PATH + "wallpaper.xml")
+# def write_xml(setlocation):
+#     clean_xml()
+#     log("Writing XML file")
+#     r = open(DATA_PATH + "wallpaper_template.xml", "r")
+#     template = r.read()
+#     r.close()
+#     template = template.replace("%FILE1%", FILES[0])
+#     template = template.replace("%FILE2%", FILES[1])
+#     template = template.replace("%FILE3%", FILES[2])
+#     template = template.replace("%TRANSITIONDURATION%", TRANSITIONDURATION)
+#     template = template.replace("%PICDURATION%", PICDURATION)
+#     w = open(DATA_PATH + "wallpaper.xml", "w")
+#     w.write(template)
+#     w.close()
+#     if setlocation:
+#         set_wallpaper_location(DATA_PATH + "wallpaper.xml")
+
+def set_wallpaper():
+#    if os.environ.get("KDE_FULL_SESSION") == "true":
+#        command = """
+#        qdbus org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript '
+#            var allDesktops = desktops();
+#            print (allDesktops);
+#            for (i=0;i<allDesktops.length;i++) {{
+#                d = allDesktops[i];
+#                d.wallpaperPlugin = "org.kde.image";
+#                d.currentConfigGroup = Array("Wallpaper",
+#                                             "org.kde.image",
+#                                             "General");
+#                d.writeConfig("Image", "file:///{save_location}")
+#            }}
+#        '
+#        """
+#        # TODO: Slideshow with plugin "org.kde.slideshow" -> "SlidePaths=/home/luca/.local/share/earthpornwallpaper/downloads/"
+#        os.system(command.format(save_location=FILES[0]))
+#    else:
+        lw.set(FILES[0])
 
 
-def set_wallpaper_location(filepath):
-    if "test" not in sys.argv:
-        from gi.repository import Gio
-        gsettings = Gio.Settings.new(SCHEMA)
-        gsettings.set_string(KEY, "file://" + filepath)
+
+
+# def set_wallpaper_location(filepath):
+#     if "test" not in sys.argv:
+#         from gi.repository import Gio
+#         gsettings = Gio.Settings.new(SCHEMA)
+#         gsettings.set_string(KEY, "file://" + filepath)
 
 
 def log(message):

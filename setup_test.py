@@ -5,7 +5,7 @@ import shutil
 from pwd import getpwnam
 from earthpornwallpaper import create_directories, clean_directories, delete_file, log
 
-DATA_PATH = os.path.expanduser('~/.earthpornwallpaper/')
+DATA_PATH = os.path.expanduser('~/.local/share/earthpornwallpaper/')
 DOWNLOAD_PATH = DATA_PATH + "downloads/"
 TMP_PATH = DATA_PATH + "tmp/"
 

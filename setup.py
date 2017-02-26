@@ -7,7 +7,7 @@ from pwd import getpwnam
 from time import strftime
 from earthpornwallpaper import create_directories, clean_directories, delete_file
 
-DATA_PATH = os.path.expanduser('~/.earthpornwallpaper/')
+DATA_PATH = os.path.expanduser('~/.local/share/earthpornwallpaper/')
 DOWNLOAD_PATH = DATA_PATH + "downloads/"
 TMP_PATH = DATA_PATH + "tmp/"
 PROGRAM_PATH = "/usr/local/bin/"
